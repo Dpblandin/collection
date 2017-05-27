@@ -142,10 +142,31 @@ export class Collection {
     }
 
     flatten(depth = Infinity) {
+        //@todo : to be implemented
         return this.reduce((result, item) => {
             item = item instanceof Collection ? item.all() : item;
 
         }, [])
+    }
+
+    flip() {
+        if (!Array.isArray(this.all())) {
+            const obj = Object.keys(this.all())
+              .reduce((obj, key) => Object.assign({}, obj, { [this.all()[key]]: key }), {});
+
+            return new Collection(obj);
+        }
+        
+        return this.map((item) => {
+            return Object.keys(item)
+              .reduce((obj, key) => Object.assign({}, obj, { [item[key]]: key }), []);
+        })
+    }
+
+    forget(key) {
+        delete this.all()[key];
+        
+        return this;
     }
     
     get(key) {

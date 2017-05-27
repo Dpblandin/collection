@@ -172,6 +172,24 @@ test('flatten', t => {
     t.fail();
 });
 
+test('flip array of objects', t => {
+    const c = collect([{name: 'taylor', framework: 'laravel'}]).flip();
+
+    t.deepEqual(c, new Collection([{taylor: 'name', laravel: 'framework'}]));
+});
+
+test('flip object', t => {
+    const c = collect({name: 'taylor', framework: 'laravel'}).flip();
+
+    t.deepEqual(c, new Collection({taylor: 'name', laravel: 'framework'}));
+})
+
+test('forget', t => {
+    const c = collect({name: 'taylor', framework: 'laravel'}).forget('name');
+
+    t.deepEqual(c, new Collection({framework: 'laravel'}));
+})
+
 test('get', t => {
     const desk = collect({account_id: 1, product: 'Desk'}).get('product');
 
