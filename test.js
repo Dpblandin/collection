@@ -221,6 +221,18 @@ test('has', t => {
     t.true(hasProduct);
 });
 
+test('implode', t => {
+   const imploded = collect([1, 2, 3, 4, 5]).implode('-');
+
+    t.is(imploded, '1-2-3-4-5');
+});
+
+test('implode on array of objects', t => {
+    const imploded = collect([{account_id: 1, product: 'Desk'}, {account_id: 1, product: 'Chair'}]).implode('product', ', ');
+
+    t.is(imploded, 'Desk, Chair');
+});
+
 test('isEmpty', t => {
     const empty = collect([]).isEmpty();
 

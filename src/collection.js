@@ -192,6 +192,16 @@ export class Collection {
     has(key) {
         return this.all().hasOwnProperty(key);
     }
+
+    implode(value, glue = null) {
+        const first = this.first();
+
+        if (typeof first === 'object') {
+            return this.pluck(value).all().join(glue);
+        }
+        
+        return this.all().join(value);
+    }
     
     isEmpty() {
         return this.count() === 0;
