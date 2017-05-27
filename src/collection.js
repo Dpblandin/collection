@@ -384,6 +384,12 @@ export class Collection {
 
         return this.all().reduce((a, b) => a + b, 0);
     }
+    
+    tap(callback) {
+        callback(new Collection(this.all()));
+        
+        return this;
+    }
 
     unshift(...items) {
         return this.all().unshift(...items);

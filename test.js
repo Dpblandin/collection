@@ -397,6 +397,12 @@ test('sum with callback', t => {
     t.is(c, 12);
 });
 
+test('tap', t => {
+   const c = collect([1, 2, 3]).tap(collection => collection);
+
+    t.deepEqual(c, new Collection([1, 2, 3]));
+});
+
 test('unshift', t => {
     const c = collect([1, 2, 3])
     const unshifted = c.unshift(4, 5);
