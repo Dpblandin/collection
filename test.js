@@ -416,9 +416,15 @@ test('sum with callback', t => {
 });
 
 test('tap', t => {
-   const c = collect([1, 2, 3]).tap(collection => collection);
+    const c = collect([1, 2, 3]).tap(collection => collection);
 
     t.deepEqual(c, new Collection([1, 2, 3]));
+});
+
+test('times', t => {
+    const c = new Collection().times(10, (number) => number * 9);
+
+    t.deepEqual(c, new Collection([9, 18, 27, 36, 45, 54, 63, 72, 81, 90]));
 });
 
 test('unshift', t => {

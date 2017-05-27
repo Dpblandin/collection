@@ -410,6 +410,16 @@ export class Collection {
         return this;
     }
 
+    times(amount, callback) {
+        if (amount < 1) {
+            return new Collection();
+        }
+
+        const [, ...times] = [...Array(amount + 1).keys()];
+
+        return (new Collection(times).map(callback));
+    }
+
     unshift(...items) {
         return this.all().unshift(...items);
     }
