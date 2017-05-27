@@ -141,12 +141,14 @@ export class Collection {
         return this.items[0];
     }
 
-    flatten(depth = Infinity) {
-        //@todo : to be implemented
-        return this.reduce((result, item) => {
-            item = item instanceof Collection ? item.all() : item;
+    flatten(depth = false) {
+        const flattened = new Collection([].concat(...this.all()));
 
-        }, [])
+        if (! depth || ! flattened.contains(Array.isArray)) {
+            return flattened;
+        }
+
+        return flattened.flatten(true);
     }
 
     flip() {
@@ -215,12 +217,28 @@ export class Collection {
         return typeof this.all() === 'object';
     }
 
+    keys() {
+        return new Collection(Object.keys(this.all()));
+    }
+
     last(callback = null) {
         if (typeof callback === 'function') {
             return this.reverse().first(callback);
         }
 
         return this.items[this.count() - 1];
+    }
+
+    static macro(name, callback) {
+        if (Collection.prototype[name] !== undefined) {
+            throw new Error('Collection.macro(): This macro name is already defined.');
+        }
+
+        Collection.prototype[name] = function collectionMacroWrapper(...args) {
+            const collection = this;
+
+            return callback(collection, ...args);
+        };
     }
     
     map(callback) {
@@ -410,7 +428,19 @@ export class Collection {
         return this;
     }
 
-    times(amount, callback) {
+    take(amount) {
+        if (!amount) {
+            return new Collection();
+        }
+
+        if (amount < 0) {
+            return new Collection(this.all().reverse()).take(-amount);
+        }
+
+        return new Collection(this.all().slice(0, amount));
+    }
+
+    static times(amount, callback) {
         if (amount < 1) {
             return new Collection();
         }
@@ -452,6 +482,14 @@ export class Collection {
         return this.filter(item => {
             return new Collection(values).contains(item[key], true);
         })
+    }
+
+    zip(array) {
+        if (array instanceof Collection) {
+            return this.map((item, index) => [item, array.get(index)]);
+        }
+
+        return this.map((item, index) => [item, array[index]]);
     }
 }
 

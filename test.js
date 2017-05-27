@@ -165,11 +165,9 @@ test('first with callback on objects', t => {
 });
 
 test('flatten', t => {
-    const c = collect([
-        { name: 'taylor', languages: ['php', 'javascript'] }
-    ]).flatten();
+    const c = collect(['name', 'taylor', 'languages', ['php', 'javascript']]).flatten();
 
-    t.fail();
+    t.deepEqual(c, new Collection(['name', 'taylor', 'languages', 'php', 'javascript']));
 });
 
 test('flip array of objects', t => {
@@ -245,6 +243,12 @@ test('isNotEmpty', t => {
     t.false(empty);
 });
 
+test('keys', t => {
+    const c = collect({name: 'john', age: 30, gender: 'male'}).keys();
+
+    t.deepEqual(c, new Collection(['name', 'age', 'gender']));
+});
+
 test('last without param', t => {
     const c = collect([1, 2, 3]).last();
 
@@ -255,6 +259,12 @@ test('last with callback', t => {
     const c = collect([1, 2, 3]).last(item => item + 1 === 2);
 
     t.is(c, 1);
+});
+
+test('macro', t => {
+    Collection.macro('awesomeMacro', (collection) => collection);
+
+    t.true(typeof Collection.prototype.awesomeMacro === 'function');
 });
 
 test('map', t => {
@@ -415,6 +425,12 @@ test('sum with callback', t => {
     t.is(c, 12);
 });
 
+test('take', t => {
+    const c = collect([0, 1, 2, 3, 4, 5]).take(3);
+
+    t.deepEqual(c, new Collection([0, 1, 2]));
+});
+
 test('tap', t => {
     const c = collect([1, 2, 3]).tap(collection => collection);
 
@@ -422,7 +438,7 @@ test('tap', t => {
 });
 
 test('times', t => {
-    const c = new Collection().times(10, (number) => number * 9);
+    const c = Collection.times(10, (number) => number * 9);
 
     t.deepEqual(c, new Collection([9, 18, 27, 36, 45, 54, 63, 72, 81, 90]));
 });
@@ -494,4 +510,10 @@ test('whereInStrict', t => {
     t.deepEqual(c, new Collection([
         { product: 'Desk', price: 200 },
     ]));
+});
+
+test('zip', t => {
+    const c = collect(['Chair', 'Desk']).zip([100, 200]);
+
+    t.deepEqual(c, new Collection([['Chair', 100], ['Desk', 200]]));
 });
