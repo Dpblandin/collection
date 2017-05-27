@@ -275,6 +275,21 @@ export class Collection {
           }, start)
     }
     
+    nth(step, offset = 0) {
+        let newArr = [];
+        let position = 0;
+        
+        this.all().forEach(item => {
+            if (position %  step === offset) {
+                newArr.push(item);
+            }
+            
+            position += 1;
+        });
+        
+        return new Collection(newArr);
+    }
+    
     only(...keys) {
         if (!Array.isArray(this.all())) {
             let obj = {};

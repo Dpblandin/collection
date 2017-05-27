@@ -289,6 +289,18 @@ test('min with key', t => {
     t.is(c, 10);
 });
 
+test('nth', t => {
+    const c = collect(['a', 'b', 'c', 'd', 'e', 'f']).nth(4);
+
+    t.deepEqual(c, new Collection(['a', 'e']));
+});
+
+test('nth array objects', t => {
+    const c = collect([{ name: 'taylor' }, { name: 'jeffrey' }, { name: 'douglas' }]).nth(2);
+
+    t.deepEqual(c, new Collection([{name: 'taylor'}, {name: 'douglas'}]));
+});
+
 test('only', t => {
     const c = collect({product_id: 1, name: 'Desk', price: 100, discount: false}).only('product_id', 'name');
 
