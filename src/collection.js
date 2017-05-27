@@ -306,6 +306,10 @@ export class Collection {
 
         return null;
     }
+    
+    pipe(callback) {
+        return callback(this);
+    }
 
     pluck(property, keyed = null) {
         if (keyed) {

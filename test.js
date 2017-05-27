@@ -307,6 +307,12 @@ test('only', t => {
     t.deepEqual(c, new Collection({product_id: 1, name: 'Desk'}));
 });
 
+test('pipe', t => {
+    const sum = collect([1, 2, 3]).pipe(collection => collection.sum());
+
+    t.is(sum, 6);
+});
+
 test('pluck with property', t => {
     const c = collect([{foo: 1, bar: 2}, {foo: 2, bar: 3}]).pluck('foo');
 
