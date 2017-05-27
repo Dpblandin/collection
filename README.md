@@ -1,1 +1,1 @@
-# collection
+# Laravel collections for javascript
