@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Laravel collections for javascript",
   "tags": [
-    "collection",
+    "collections",
+    "arrays",
     "javascript",
     "laravel"
   ],
