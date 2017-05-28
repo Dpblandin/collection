@@ -105,16 +105,10 @@ export class Collection {
     except(...keys) {
         if (!Array.isArray(this.all())) {
             keys = new Collection(keys);
-            let obj = {};
 
-            for (let [key, value] of Object.entries(this.all())) {
-
-                if (!keys.contains(key)) {
-                    obj[key] = value;
-                }
-            }
-
-            return new Collection(obj);
+            return new Collection(Object.entries(this.all())
+              .filter(([key, value]) => !keys.contains(key))
+              .reduce((result, [key, value]) => Object.assign({}, result, { [key]: value }), {}));
         }
 
         return null;
@@ -321,7 +315,7 @@ export class Collection {
             let obj = {};
 
             for (let [key, value] of Object.entries(this.all())) {
-                
+
                 [...keys]
                   .filter(objKey => objKey === key)
                   .forEach((objKey) => obj[objKey] = value);
