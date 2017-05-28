@@ -13,6 +13,10 @@ export class Collection {
             return this.sum(callback) / count;
         }
     }
+
+    each(callback) {
+        return this.all().forEach(callback);
+    }
     
     average(callback = null) {
         return this.avg(callback);
@@ -194,6 +198,10 @@ export class Collection {
     has(key) {
         return this.all().hasOwnProperty(key);
     }
+    
+    static hasMacro(name) {
+        return Collection.prototype[name] !== undefined;
+    }
 
     implode(value, glue = null) {
         const first = this.first();
@@ -358,12 +366,9 @@ export class Collection {
     
     pull(key) {
         const pulled = this.get(key);
-        let obj = {};
-        for (let [objKey, value] of Object.entries(this.all())){
-            if (objKey !== key) {
-                obj[objKey] = value;
-            }
-        }
+        const obj = Object.entries(this.all())
+          .filter(([objKey, value]) => objKey !== key)
+          .reduce((result, [objKey, value]) => Object.assign({}, result, { [objKey]: value }), {});
 
         if(Object.keys(obj).length > 0) {
             this.items = obj;

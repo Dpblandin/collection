@@ -1,5 +1,5 @@
 import test from 'ava';
-import {Collection, collect} from './src/collection';
+import {Collection, collect} from './../src/collection';
 
 test('it should be constructed with an array of items', t => {
     const c = new Collection([1,2,3,4]).all();
