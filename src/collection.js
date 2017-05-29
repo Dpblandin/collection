@@ -3,7 +3,17 @@ export class Collection {
         this.items = items;
     }
 
-    all() {
+    all(recursive = false) {
+        if (recursive && Array.isArray(this.items)) {
+            return this.items.map(item => {
+                if (item instanceof Collection) {
+                    return item.all(true);
+                }
+
+                return item;
+            })
+        }
+
         return this.items;
     }
 
@@ -539,6 +549,10 @@ export class Collection {
         const [, ...times] = [...Array(amount + 1).keys()];
 
         return (new Collection(times).map(callback));
+    }
+
+    toArray() {
+        return this.all(true);
     }
 
     unique(key = null) {

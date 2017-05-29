@@ -526,6 +526,16 @@ test('tap', t => {
     t.deepEqual(c, new Collection([1, 2, 3]));
 });
 
+test('toArray', t => {
+    const c = collect([
+        collect({name: 'a'}),
+        1,
+        collect([1, 2])
+    ]).toArray();
+
+    t.deepEqual(c, [{name: 'a'}, 1, [1, 2]]);
+});
+
 test('times', t => {
     const c = Collection.times(10, (number) => number * 9);
 
