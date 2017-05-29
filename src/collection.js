@@ -412,6 +412,14 @@ export class Collection {
         return new Collection(this.all().slice(offset));
     }
 
+    sort(callback = null) {
+        if (callback) {
+            return new Collection(this.all().sort(callback))
+        }
+
+        return new Collection(this.all().sort());
+    }
+
     splice(offset, length = null, replacement = []) {
         if([...arguments].length === 1) {
             return new Collection(this.all().splice(offset));
@@ -422,6 +430,16 @@ export class Collection {
         }
 
         return new Collection(this.all().splice(offset, length, ...replacement))
+    }
+    
+    split(numberOfGroups) {
+        if (this.isEmpty()) {
+            return new Collection();
+        }
+        
+        const groupSize = Math.ceil(this.count() / numberOfGroups);
+        
+        return this.chunk(groupSize)
     }
 
     sum(callback = null) {

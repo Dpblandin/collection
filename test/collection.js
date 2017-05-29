@@ -420,6 +420,18 @@ test('slice with length', t => {
     t.deepEqual(c, new Collection([5]));
 });
 
+test('sort', t => {
+    const c = collect([5, 3, 1, 2, 4]).sort();
+
+    t.deepEqual(c, new Collection([1, 2, 3, 4, 5]));
+});
+
+test('sort with callback', t => {
+    const c = collect([5, 3, 1, 2, 4]).sort((a, b) => b - a);
+
+    t.deepEqual(c, new Collection([5, 4, 3, 2, 1]));
+});
+
 test('splice', t => {
     const collection = collect([1, 2, 3, 4, 5]);
     const chunk = collection.splice(2);
@@ -442,6 +454,13 @@ test('splice with length and replacement', t => {
 
     t.deepEqual(chunk, new Collection([3]));
     t.deepEqual(collection, new Collection([1, 2, 10, 11, 4, 5]));
+});
+
+test('split', t => {
+    const collection = collect([1, 2, 3, 4, 5]);
+    const split = collection.split(3);
+
+    t.deepEqual(split, new Collection([[1, 2], [3, 4], [5]]));
 });
 
 test('sum with no param', t => {
