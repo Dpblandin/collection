@@ -174,7 +174,7 @@ export class Collection {
         return this.all()[key] || null;
     }
 
-    getArraybleItems(items) {
+    static getArraybleItems(items) {
         if (Array.isArray(items)) {
             return items;
         }
@@ -191,7 +191,11 @@ export class Collection {
     }
 
     has(key) {
-        return this.all().hasOwnProperty(key);
+        if (!Array.isArray(this.all())) {
+            return this.all().hasOwnProperty(key);
+        }
+
+        return !! ~this.all().indexOf(key);
     }
     
     static hasMacro(name) {
@@ -492,6 +496,36 @@ export class Collection {
         const [, ...times] = [...Array(amount + 1).keys()];
 
         return (new Collection(times).map(callback));
+    }
+
+    unique(key = null) {
+        if (typeof key === 'string') {
+            return this.unique(item => item[key]);
+        }
+
+        if (key) {
+            const mappedCollection = new Collection();
+
+            return this.reduce((collection, item) => {
+
+                const mappedItem = key(item);
+                console.log(collection, mappedItem);
+                if (! mappedCollection.has(mappedItem)) {
+                    collection.push(item);
+                    mappedCollection.push(mappedItem);
+                }
+
+                return collection;
+            }, new Collection);
+        }
+
+        return this.reduce((collection, item) => {
+            if (! collection.has(item)) {
+                collection.push(item);
+            }
+
+            return collection;
+        }, new Collection);
     }
 
     unshift(...items) {

@@ -206,10 +206,10 @@ test('get null', t => {
 });
 
 test('getArrayableItems', t => {
-    const items = collect().getArraybleItems([1, 2, 3]);
+    const items = Collection.getArraybleItems([1, 2, 3]);
     const c = collect([1, 2, 3]);
-    const collectionItems = collect().getArraybleItems(c);
-    const objectItems = collect().getArraybleItems({
+    const collectionItems = Collection.getArraybleItems(c);
+    const objectItems = Collection.getArraybleItems({
         toArray: () => [1, 2, 3]
     });
 
@@ -506,6 +506,27 @@ test('times', t => {
     const c = Collection.times(10, (number) => number * 9);
 
     t.deepEqual(c, new Collection([9, 18, 27, 36, 45, 54, 63, 72, 81, 90]));
+});
+
+test('unique', t => {
+    const c = collect([1, 1, 2, 2, 3, 4, 2]).unique();
+
+    t.deepEqual(c, new Collection([1, 2, 3, 4]));
+});
+
+test('unique with key as string', t => {
+    const c = collect([
+        { name: 'iPhone 6', brand: 'Apple', type: 'phone' },
+        { name: 'iPhone 5', brand: 'Apple', type: 'phone' },
+        { name: 'Apple Watch', brand: 'Apple', type: 'watch' },
+        { name: 'Galaxy S6', brand: 'Samsung', type: 'phone' },
+        { name: 'Galaxy Gear', brand: 'Samsung', type: 'watch' },
+    ]).unique('brand');
+
+    t.deepEqual(c, new Collection([
+        {name: 'iPhone 6', brand: 'Apple', type: 'phone'},
+        {name: 'Galaxy S6', brand: 'Samsung', type: 'phone'},
+    ]));
 });
 
 test('unshift', t => {
