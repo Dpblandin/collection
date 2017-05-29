@@ -432,6 +432,12 @@ test('sort with callback', t => {
     t.deepEqual(c, new Collection([5, 4, 3, 2, 1]));
 });
 
+test('sortDesc', t => {
+    const c = collect([5, 3, 1, 2, 4]).sortDesc();
+
+    t.deepEqual(c, new Collection([5, 4, 3, 2, 1]));
+});
+
 test('splice', t => {
     const collection = collect([1, 2, 3, 4, 5]);
     const chunk = collection.splice(2);

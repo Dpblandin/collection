@@ -419,6 +419,12 @@ export class Collection {
 
         return new Collection(this.all().sort());
     }
+    
+    sortDesc() {
+        const sorted = this.sort();
+        
+        return new Collection(sorted.all().reverse());
+    }
 
     splice(offset, length = null, replacement = []) {
         if([...arguments].length === 1) {
