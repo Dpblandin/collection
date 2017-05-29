@@ -292,6 +292,18 @@ test('max with key', t => {
     t.is(c, 20);
 });
 
+test('median', t => {
+    const c = collect([1, 1, 2, 4]).median();
+
+    t.is(c, 1.5);
+});
+
+test('median with key', t => {
+    const c = collect([{foo: 10}, {foo: 10}, {foo: 20}, {foo: 40}]).median('foo');
+
+    t.is(c, 15);
+});
+
 test('min', t => {
     const c = collect([1, 2, 3]).min();
 
@@ -535,6 +547,12 @@ test('unshift', t => {
 
     t.is(unshifted, 5);
     t.deepEqual(c, new Collection([4, 5, 1, 2, 3]));
+});
+
+test('values', t => {
+    const c = collect({name: 'John', age: 15, gender: 'male'}).values();
+
+    t.deepEqual(c, new Collection(['John', 15, 'male']));
 });
 
 test('when', t => {

@@ -275,6 +275,27 @@ export class Collection {
               return result === null || item > result ? item : result;
           }, start) 
     }
+    
+    median(key = null) {
+        const count = this.count();
+        
+        if (count === 0) {
+            return;
+        }
+        
+        const values = this
+          .pipe(() => key ? this.pluck(key) : this)
+          .sort()
+          .values();
+        
+        const middle = parseInt(count / 2);
+
+        if (count % 2) {
+            return values.get(middle);
+        }
+
+        return (new Collection([values.get(middle - 1), values.get(middle)])).average();
+    }
 
     min(key = null) {
         let start = this.first();
@@ -509,7 +530,6 @@ export class Collection {
             return this.reduce((collection, item) => {
 
                 const mappedItem = key(item);
-                console.log(collection, mappedItem);
                 if (! mappedCollection.has(mappedItem)) {
                     collection.push(item);
                     mappedCollection.push(mappedItem);
@@ -530,6 +550,10 @@ export class Collection {
 
     unshift(...items) {
         return this.all().unshift(...items);
+    }
+
+    values() {
+        return this.keys().map(key => this.all()[key]);
     }
     
     when(value, callback, defaultValue = null) {
