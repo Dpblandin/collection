@@ -400,6 +400,14 @@ test('reverse', t => {
     t.deepEqual(c, new Collection([3, 2, 1]));
 });
 
+test('shift', t => {
+    const c = collect([1, 2, 3]);
+    const shifted = c.shift();
+
+    t.is(shifted, 1);
+    t.deepEqual(c, new Collection([2, 3]));
+});
+
 test('slice', t => {
     const c = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).slice(4);
 
@@ -412,12 +420,28 @@ test('slice with length', t => {
     t.deepEqual(c, new Collection([5]));
 });
 
-test('shift', t => {
-    const c = collect([1, 2, 3]);
-    const shifted = c.shift();
+test('splice', t => {
+    const collection = collect([1, 2, 3, 4, 5]);
+    const chunk = collection.splice(2);
+    
+    t.deepEqual(chunk, new Collection([3, 4, 5]));
+    t.deepEqual(collection, new Collection([1, 2]));
+});
 
-    t.is(shifted, 1);
-    t.deepEqual(c, new Collection([2, 3]));
+test('splice with length', t => {
+    const collection = collect([1, 2, 3, 4, 5]);
+    const chunk = collection.splice(2, 1);
+
+    t.deepEqual(chunk, new Collection([3]));
+    t.deepEqual(collection, new Collection([1, 2, 4, 5]));
+});
+
+test('splice with length and replacement', t => {
+    const collection = collect([1, 2, 3, 4, 5]);
+    const chunk = collection.splice(2, 1, [10, 11]);
+
+    t.deepEqual(chunk, new Collection([3]));
+    t.deepEqual(collection, new Collection([1, 2, 10, 11, 4, 5]));
 });
 
 test('sum with no param', t => {

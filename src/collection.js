@@ -412,6 +412,18 @@ export class Collection {
         return new Collection(this.all().slice(offset));
     }
 
+    splice(offset, length = null, replacement = []) {
+        if([...arguments].length === 1) {
+            return new Collection(this.all().splice(offset));
+        }
+
+        if (replacement.length === 0) {
+            return new Collection(this.all().splice(offset, length))
+        }
+
+        return new Collection(this.all().splice(offset, length, ...replacement))
+    }
+
     sum(callback = null) {
         if (typeof callback === 'function') {
             return this.all().reduce((a, b) => a + callback(b), 0)
