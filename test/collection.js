@@ -316,6 +316,18 @@ test('min with key', t => {
     t.is(c, 10);
 });
 
+test('mode', t => {
+    const c = collect([1, 1, 2, 4]).mode();
+
+    t.is(c, 1);
+});
+
+test('mode with key', t => {
+    const c = collect([{foo: 10}, {foo: 10}, {foo: 20}, {foo: 40}]).mode('foo');
+
+    t.is(c, 10);
+});
+
 test('nth', t => {
     const c = collect(['a', 'b', 'c', 'd', 'e', 'f']).nth(4);
 

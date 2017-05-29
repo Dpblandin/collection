@@ -321,6 +321,28 @@ export class Collection {
           }, start)
     }
     
+    mode(key = null) {
+        if (this.isEmpty()) {
+            return;
+        }
+        
+        const collection = key ? this.pluck(key) : this;
+        let numMapping = {};
+        let greatestFreq = 0;
+        let mode = null;
+        
+        collection.each(function findMode(number) {
+            numMapping[number] = (numMapping[number] || 0) + 1;
+
+            if (greatestFreq < numMapping[number]) {
+                greatestFreq = numMapping[number];
+                mode = number;
+            }
+        });
+
+        return +mode;
+    }
+    
     nth(step, offset = 0) {
         let newArr = [];
         let position = 0;

@@ -1,6 +1,6 @@
 {
   "name": "collection",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "description": "Laravel collections for javascript",
   "tags": [
     "collections",
