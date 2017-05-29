@@ -13,10 +13,6 @@ export class Collection {
             return this.sum(callback) / count;
         }
     }
-
-    each(callback) {
-        return this.all().forEach(callback);
-    }
     
     average(callback = null) {
         return this.avg(callback);
@@ -102,6 +98,15 @@ export class Collection {
         })
     }
 
+    each(callback) {
+        return this.all().forEach(callback);
+    }
+
+    every(callback) {
+        return this.all().every(callback)
+    }
+
+
     except(...keys) {
         if (!Array.isArray(this.all())) {
             keys = new Collection(keys);
@@ -113,11 +118,7 @@ export class Collection {
 
         return null;
     }
-
-    every(callback) {
-        return this.all().every(callback)
-    }
-
+    
     filter(callback) {
         return new Collection(this.all().filter(callback));
     }
@@ -401,6 +402,14 @@ export class Collection {
 
     shift() {
         return this.all().shift();
+    }
+
+    slice(offset, length = null) {
+        if (length) {
+            return new Collection(this.all().slice(offset, length + offset));
+        }
+
+        return new Collection(this.all().slice(offset));
     }
 
     sum(callback = null) {

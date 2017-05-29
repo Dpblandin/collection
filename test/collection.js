@@ -128,6 +128,11 @@ test('diffKeys', t => {
     ]));
 });
 
+test('each', t => {
+    const items = [1, 2, 3, 4];
+    collect(items).each((item, key) => t.is(item, items[key]))
+});
+
 test('every', t => {
     const c = collect([1, 2, 3, 4]).every(value => value > 2);
 
@@ -395,6 +400,17 @@ test('reverse', t => {
     t.deepEqual(c, new Collection([3, 2, 1]));
 });
 
+test('slice', t => {
+    const c = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).slice(4);
+
+    t.deepEqual(c, new Collection([5, 6, 7, 8, 9, 10]));
+});
+
+test('slice with length', t => {
+    const c = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).slice(4, 1);
+
+    t.deepEqual(c, new Collection([5]));
+});
 
 test('shift', t => {
     const c = collect([1, 2, 3]);
