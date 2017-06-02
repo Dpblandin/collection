@@ -1,6 +1,6 @@
 export class Collection {
     constructor(items = []) {
-        this.items = items;
+        this.items = Collection.getArraybleItems(items);
     }
 
     all(recursive = false) {
@@ -190,11 +190,15 @@ export class Collection {
         }
 
         if (items instanceof Collection) {
-            return items.all();
+            return items.all(true);
         }
 
         if (typeof items.toArray === 'function') {
             return items.toArray();
+        }
+
+        if (items instanceof Object) {
+            return items;
         }
         
         return [items];
@@ -424,6 +428,7 @@ export class Collection {
 
         if(Object.keys(obj).length > 0) {
             this.items = obj;
+
             return pulled;
         }
 
@@ -433,6 +438,7 @@ export class Collection {
     put(key, value) {
         if (this.isObject()) {
             this.all()[key] = value;
+
             return new Collection(this.all());
         }
 
@@ -440,7 +446,7 @@ export class Collection {
     }
 
     push(item) {
-        this.items.push(item);
+        this.all().push(item);
 
         return this;
     }

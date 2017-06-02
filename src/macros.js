@@ -53,7 +53,7 @@ if (! Collection.hasMacro('ifAny')) {
      * @return Collection
      */
     Collection.macro('ifAny', (collection, callback) => {
-        if (!collection.isEmpty()) {
+        if (collection.isNotEmpty()) {
             callback(collection);
         }
 

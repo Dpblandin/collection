@@ -25,6 +25,12 @@ test('collect function with items creates a new Collection instance with items',
     t.deepEqual(c, new Collection([1, 2]));
 });
 
+test('collect function with collection', t => {
+    const c = collect(collect([1, 2]));
+
+    t.deepEqual(c, new Collection([1, 2]));
+});
+
 test('add', t => {
     const c = collect([1, 2]).push(3);
 
