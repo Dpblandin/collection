@@ -313,7 +313,7 @@ export class Collection {
 
     merge(objects) {
         return this.map((item, index) => {
-            return Object.assign(item, objects[index]);
+            return Object.assign({}, item, objects[index]);
         });
     }
 

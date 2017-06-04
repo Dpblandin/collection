@@ -311,11 +311,12 @@ test('median with key', t => {
 });
 
 test('merge (objects)', t => {
-    const c = collect([{name: 'Chair'}, {name: 'Desk'}]).merge([{id: 1}, {id: 2}]);
+    const c = collect([{name: 'Chair'}, {name: 'Desk'}]);
+    const merged = c.merge([{id: 1}, {id: 2}]);
 
-    t.deepEqual(c, new Collection([{name: 'Chair', id: 1}, {name: 'Desk', id: 2}]));
+    t.deepEqual(merged, new Collection([{name: 'Chair', id: 1}, {name: 'Desk', id: 2}]));
+    t.deepEqual(c, new Collection([{name: 'Chair'}, {name: 'Desk'}]));
 });
-
 
 test('min', t => {
     const c = collect([1, 2, 3]).min();
