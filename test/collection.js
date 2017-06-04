@@ -310,6 +310,13 @@ test('median with key', t => {
     t.is(c, 15);
 });
 
+test('merge (objects)', t => {
+    const c = collect([{name: 'Chair'}, {name: 'Desk'}]).merge([{id: 1}, {id: 2}]);
+
+    t.deepEqual(c, new Collection([{name: 'Chair', id: 1}, {name: 'Desk', id: 2}]));
+});
+
+
 test('min', t => {
     const c = collect([1, 2, 3]).min();
 

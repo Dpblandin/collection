@@ -311,6 +311,12 @@ export class Collection {
         return (new Collection([values.get(middle - 1), values.get(middle)])).average();
     }
 
+    merge(objects) {
+        return this.map((item, index) => {
+            return Object.assign(item, objects[index]);
+        });
+    }
+
     min(key = null) {
         let start = this.first();
 
