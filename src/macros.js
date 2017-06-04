@@ -2,7 +2,7 @@ import {Collection} from './collection'
 
 if (! Collection.hasMacro('log')) {
 
-    Collection.macro('log', (collection, message) => {
+    Collection.macro('log', (collection, message = '') => {
         console.log(message, collection);
 
         return collection;

@@ -11,6 +11,15 @@ test('log', t => {
     t.deepEqual(c.all(), [2, 4, 6]);
 });
 
+test('log without message', t => {
+    const c = collect([1, 2, 3])
+        .log()
+        .map(item => item * 2)
+        .log();
+
+    t.deepEqual(c.all(), [2, 4, 6]);
+});
+
 test('collect', t => {
     const c = collect({ screen: { id: 1, order: 2, name: 'screen_1'} })
       .collect('screen');
