@@ -11,7 +11,7 @@ export class Collection {
                 }
 
                 return item;
-            })
+            });
         }
 
         return this.items;
@@ -22,8 +22,10 @@ export class Collection {
         if (count) {
             return this.sum(callback) / count;
         }
+
+        return this;
     }
-    
+
     average(callback = null) {
         return this.avg(callback);
     }
@@ -33,7 +35,13 @@ export class Collection {
             return new Collection();
         }
         
-        return new Collection(this.all().reduce((a,b,i,g) => !(i % size) ? a.concat([g.slice(i,i+size)]) : a, []));
+        return new Collection(this.all().reduce((a, b, i, g) => {
+            if (!(i % size)) {
+                return a.concat([g.slice(i, i + size)]);
+            }
+
+            return a;
+        }, []));
     }
 
     collapse() {
@@ -54,7 +62,7 @@ export class Collection {
 
 
     combine(values) {
-        let newArray = {};
+        const newArray = {};
         this.all().forEach((item, key) => {
             newArray[item] = values[key];
         });
@@ -69,13 +77,12 @@ export class Collection {
                     return item === callback;
                 }
 
+                // eslint-disable-next-line eqeqeq
                 return item == callback;
             });
         }
 
-        if (typeof callback === 'function') {
-            return this.items.some((item, key) => callback(item, key));
-        }
+        return this.items.some((item, key) => callback(item, key));
     }
 
     count() {
@@ -89,23 +96,21 @@ export class Collection {
     diff(values) {
         values = new Collection(values);
 
-        return this.reject(item => {
-            return values.contains(item);
-        })
+        return this.reject(item => values.contains(item));
     }
 
     diffKeys(values) {
         values = new Collection(values);
 
         return this.reject(item => {
-            const [itemKey, ] = Object.keys(item);
+            const [itemKey] = Object.keys(item);
 
-            return values.contains((value) => {
-                const [key,] = Object.keys(value);
+            return values.contains(value => {
+                const [key] = Object.keys(value);
 
                 return itemKey === key;
-            })
-        })
+            });
+        });
     }
 
     each(callback) {
@@ -113,7 +118,7 @@ export class Collection {
     }
 
     every(callback) {
-        return this.all().every(callback)
+        return this.all().every(callback);
     }
 
 
@@ -122,7 +127,7 @@ export class Collection {
             keys = new Collection(keys);
 
             return new Collection(Object.entries(this.all())
-              .filter(([key, value]) => !keys.contains(key))
+              .filter(([key]) => !keys.contains(key))
               .reduce((result, [key, value]) => Object.assign({}, result, { [key]: value }), {}));
         }
 
@@ -134,9 +139,8 @@ export class Collection {
     }
 
     first(callback = null) {
-
         if (this.items.length === 0) {
-            return null
+            return null;
         }
 
         if (typeof callback === 'function') {
@@ -153,7 +157,7 @@ export class Collection {
     flatten(depth = false) {
         const flattened = new Collection([].concat(...this.all()));
 
-        if (! depth || ! flattened.contains(Array.isArray)) {
+        if (!depth || !flattened.contains(Array.isArray)) {
             return flattened;
         }
 
@@ -162,16 +166,15 @@ export class Collection {
 
     flip() {
         if (!Array.isArray(this.all())) {
-            const obj = Object.keys(this.all())
+            const o = Object.keys(this.all())
               .reduce((obj, key) => Object.assign({}, obj, { [this.all()[key]]: key }), {});
 
-            return new Collection(obj);
+            return new Collection(o);
         }
         
-        return this.map((item) => {
-            return Object.keys(item)
-              .reduce((obj, key) => Object.assign({}, obj, { [item[key]]: key }), []);
-        })
+        return this.map(item =>
+            Object.keys(item)
+                .reduce((obj, key) => Object.assign({}, obj, { [item[key]]: key }), []));
     }
 
     forget(key) {
@@ -209,7 +212,7 @@ export class Collection {
             return this.all().hasOwnProperty(key);
         }
 
-        return !! ~this.all().indexOf(key);
+        return !!~this.all().indexOf(key);
     }
     
     static hasMacro(name) {
@@ -276,10 +279,10 @@ export class Collection {
         return this
           .filter(value => {
               if (key) {
-                  return value[key] !== null
+                  return value[key] !== null;
               }
 
-              return value !== null
+              return value !== null;
           })
           .reduce((result, item) => {
               if (key) {
@@ -287,18 +290,18 @@ export class Collection {
               }
 
               return result === null || item > result ? item : result;
-          }, start) 
+          }, start);
     }
     
     median(key = null) {
         const count = this.count();
         
         if (count === 0) {
-            return;
+            return null;
         }
         
         const values = this
-          .pipe(() => key ? this.pluck(key) : this)
+          .pipe(() => (key ? this.pluck(key) : this))
           .sort()
           .values();
         
@@ -312,9 +315,7 @@ export class Collection {
     }
 
     merge(objects) {
-        return this.map((item, index) => {
-            return Object.assign({}, item, objects[index]);
-        });
+        return this.map((item, index) => Object.assign({}, item, objects[index]));
     }
 
     min(key = null) {
@@ -327,10 +328,10 @@ export class Collection {
         return this
           .filter(value => {
               if (key) {
-                  return value[key] !== null
+                  return value[key] !== null;
               }
 
-              return value !== null
+              return value !== null;
           })
           .reduce((result, item) => {
               if (key) {
@@ -338,20 +339,20 @@ export class Collection {
               }
 
               return result === null || item < result ? item : result;
-          }, start)
+          }, start);
     }
     
     mode(key = null) {
         if (this.isEmpty()) {
-            return;
+            return null;
         }
         
         const collection = key ? this.pluck(key) : this;
-        let numMapping = {};
+        const numMapping = {};
         let greatestFreq = 0;
         let mode = null;
         
-        collection.each(function findMode(number) {
+        collection.each(number => {
             numMapping[number] = (numMapping[number] || 0) + 1;
 
             if (greatestFreq < numMapping[number]) {
@@ -364,11 +365,11 @@ export class Collection {
     }
     
     nth(step, offset = 0) {
-        let newArr = [];
+        const newArr = [];
         let position = 0;
         
         this.all().forEach(item => {
-            if (position %  step === offset) {
+            if (position % step === offset) {
                 newArr.push(item);
             }
             
@@ -380,14 +381,13 @@ export class Collection {
     
     only(...keys) {
         if (!Array.isArray(this.all())) {
-            let obj = {};
+            const obj = {};
 
-            for (let [key, value] of Object.entries(this.all())) {
-
+            Object.entries(this.all()).forEach(([key, value]) => {
                 [...keys]
-                  .filter(objKey => objKey === key)
-                  .forEach((objKey) => obj[objKey] = value);
-            }
+                    .filter(objKey => objKey === key)
+                    .forEach(objKey => obj[objKey] = value);
+            });
 
             return new Collection(obj);
         }
@@ -401,15 +401,15 @@ export class Collection {
 
     pluck(property, keyed = null) {
         if (keyed) {
-            return this.map((item) => {
+            return this.map(item => {
                 const obj = {};
                 obj[item[keyed]] = item[property];
                 
                 return obj;
-            })
+            });
         }
         
-        return this.map(item => item[property])
+        return this.map(item => item[property]);
     }
 
     pop() {
@@ -429,10 +429,10 @@ export class Collection {
     pull(key) {
         const pulled = this.get(key);
         const obj = Object.entries(this.all())
-          .filter(([objKey, value]) => objKey !== key)
+          .filter(([objKey]) => objKey !== key)
           .reduce((result, [objKey, value]) => Object.assign({}, result, { [objKey]: value }), {});
 
-        if(Object.keys(obj).length > 0) {
+        if (Object.keys(obj).length > 0) {
             this.items = obj;
 
             return pulled;
@@ -462,7 +462,7 @@ export class Collection {
     }
 
     reject(callback) {
-        return new Collection(this.all().filter((item, key) => !callback(item, key)))
+        return new Collection(this.all().filter((item, key) => !callback(item, key)));
     }
 
     reverse() {
@@ -483,7 +483,7 @@ export class Collection {
 
     sort(callback = null) {
         if (callback) {
-            return new Collection(this.all().sort(callback))
+            return new Collection(this.all().sort(callback));
         }
 
         return new Collection(this.all().sort());
@@ -496,15 +496,16 @@ export class Collection {
     }
 
     splice(offset, length = null, replacement = []) {
-        if([...arguments].length === 1) {
+        // eslint-disable-next-line prefer-rest-params
+        if ([...arguments].length === 1) {
             return new Collection(this.all().splice(offset));
         }
 
         if (replacement.length === 0) {
-            return new Collection(this.all().splice(offset, length))
+            return new Collection(this.all().splice(offset, length));
         }
 
-        return new Collection(this.all().splice(offset, length, ...replacement))
+        return new Collection(this.all().splice(offset, length, ...replacement));
     }
     
     split(numberOfGroups) {
@@ -514,22 +515,22 @@ export class Collection {
         
         const groupSize = Math.ceil(this.count() / numberOfGroups);
         
-        return this.chunk(groupSize)
+        return this.chunk(groupSize);
     }
 
     sum(callback = null) {
         if (typeof callback === 'function') {
-            return this.all().reduce((a, b) => a + callback(b), 0)
+            return this.all().reduce((a, b) => a + callback(b), 0);
         }
 
         if (typeof callback === 'string') {
             return this.all().reduce((a, b) => {
                 if (a.hasOwnProperty(callback) && b.hasOwnProperty(callback)) {
-                    return a[callback] + b[callback]
+                    return a[callback] + b[callback];
                 }
 
                 return a + b[callback];
-            })
+            });
         }
 
         return this.all().reduce((a, b) => a + b, 0);
@@ -576,24 +577,23 @@ export class Collection {
             const mappedCollection = new Collection();
 
             return this.reduce((collection, item) => {
-
                 const mappedItem = key(item);
-                if (! mappedCollection.has(mappedItem)) {
+                if (!mappedCollection.has(mappedItem)) {
                     collection.push(item);
                     mappedCollection.push(mappedItem);
                 }
 
                 return collection;
-            }, new Collection);
+            }, new Collection());
         }
 
         return this.reduce((collection, item) => {
-            if (! collection.has(item)) {
+            if (!collection.has(item)) {
                 collection.push(item);
             }
 
             return collection;
-        }, new Collection);
+        }, new Collection());
     }
 
     unshift(...items) {
@@ -615,23 +615,20 @@ export class Collection {
     }
 
     where(key, value) {
-        return this.filter((item) => item[key] == value);
+        // eslint-disable-next-line eqeqeq
+        return this.filter(item => item[key] == value);
     }
-    
+
     whereStrict(key, value) {
         return this.filter(item => item[key] === value);
     }
-    
+
     whereIn(key, values) {
-        return this.filter(item => {
-            return new Collection(values).contains(item[key]);
-        })
+        return this.filter(item => new Collection(values).contains(item[key]));
     }
 
     whereInStrict(key, values) {
-        return this.filter(item => {
-            return new Collection(values).contains(item[key], true);
-        })
+        return this.filter(item => new Collection(values).contains(item[key], true));
     }
 
     zip(array) {
@@ -643,6 +640,4 @@ export class Collection {
     }
 }
 
-export const collect = (items) => {
-    return new Collection(items);
-};
+export const collect = items => new Collection(items);
